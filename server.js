@@ -5,7 +5,7 @@ var bodyParser = require("body-parser");
 var path = require("path");
 
 var app = express();
-var PORT = process.env.port || 3000;
+var PORT = process.env.PORT || 3000;
 
 // Sets up the Express app to handle data parsing
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -16,16 +16,45 @@ var reservation = [];
 
 // Basic route that sends the user first to the AJAX Page
 app.get("/", function(req, res) {
-  res.sendFile(path.join(__dirname, "main.html"));
+  console.log("/home...");
+  res.sendFile(path.join(__dirname, "home.html"));
+
 });
 
-app.get("/tableData", function(req, res) {
-  res.sendFile(path.join(__dirname, "table.html"));
+app.get("/tables", function(req, res) {
+	console.log('Inside tables...')
+  res.sendFile(path.join(__dirname, "tables.html"));
 });
 
 // Get all characters
-app.get("/reservations", function(req, res) {
-  res.sendFile(path.join(__dirname, "reservation.html"));
+app.get("/reserve", function(req, res) {
+	console.log('Inside /reservations...')
+  res.sendFile(path.join(__dirname, "reserve.html"));
+});
+
+// 
+app.get("/api/tables", function(req, res) {
+ 
+  for (i=0;i<tableData.length;i++) {
+   		console.log(tableData[i]);
+  }
+   return res.json(tableData);
+});
+
+// Create New Characters - takes in JSON input
+app.post("/api/reserve", function(req, res) {
+  // req.body hosts is equal to the JSON post sent from the user
+  // This works because of our body-parser middleware
+  var newreserve = req.body;
+  newreserve.routeName = newreserve.name.replace(/\s+/g, "").toLowerCase();
+
+  console.log(newreserve);
+
+  tableData.push(newreserve);
+
+  res.json(newreserve);
+
+  // console.log('In POST api/reserve....')
 });
 
 
